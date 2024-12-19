@@ -1,13 +1,14 @@
 #include <iostream>
 #include <array>
 #include <cstdlib>
-#include <ctime>
-#include <windows.h>
+#include <chrono>
+#include <thread>
 
 char check_winner();
 bool fill_house(char pc_side, int house);
 void show_board(int round);
 int pc_chose_house();
+void congratulations(char result, char user_side);
 
 std::array<std::array<char, 3>, 3> board{{
     {'1', '2', '3'},
@@ -46,53 +47,97 @@ int main(int argc, char *argv[])
     {
       user_input_result = fill_house(user_side, 0);
     }
-
     if (check_winner() != 'c')
+    {
+      show_board(i);
       break;
+    }
+    show_board(i);
 
     bool pc_input_result{false};
     while (!pc_input_result)
     {
       pc_input_result = fill_house(pc_side, pc_chose_house());
     }
+    if (check_winner() != 'c')
+    {
+      show_board(i);
+      break;
+    }
     show_board(i);
   }
 
-  std::cout << check_winner();
+  std::cout << "\nFinall result:\n";
+  show_board(0);
+
+  congratulations(check_winner(), user_side);
+}
+
+void congratulations(char result, char user_side)
+{
+  if (result == user_side)
+  {
+    std::cout << "\nWell done you won !.";
+    return;
+  }
+  else if (result == '=')
+  {
+    std::cout << "\nIt was a drow !.";
+    return;
+  }
+
+  std::cout << "\nI won !.";
 }
 
 int pc_chose_house()
 {
-  _sleep(1000);
-  std::srand(std::time(0));
+  std::this_thread::sleep_for(std::chrono::microseconds(255));
+  std::srand(std::chrono::system_clock::now().time_since_epoch().count());
   int chosed = rand() % 9;
   return chosed;
 }
 
 char check_winner()
 {
-  for (int i = 0; i < size(board); i++)
+  static std::array<bool, 3> filled_columns{false, false, false};
+  if ((board[0][0] != 'X' || board[0][0] != 'O') && (board[0][1] != 'X' || board[0][1] != 'O') && (board[0][2] != 'X' || board[0][2] != 'O'))
   {
-    for (int j = 0; j < size(board); j++)
+    filled_columns[0] = true;
+  }
+  else if ((board[1][0] != 'X' || board[1][0] != 'O') && (board[1][1] != 'X' || board[1][1] != 'O') && (board[1][2] != 'X' || board[1][2] != 'O'))
+  {
+    filled_columns[1] = true;
+  }
+  else if ((board[2][0] != 'X' || board[2][0] != 'O') && (board[2][1] != 'X' || board[2][1] != 'O') && (board[2][2] != 'X' || board[2][2] != 'O'))
+  {
+    filled_columns[2] = true;
+  }
+  if (filled_columns[0] && filled_columns[1] && filled_columns[2])
+  {
+    return '=';
+  }
+
+  for (int i = 0; i < 3; i++)
+  {
+    if (board[i][0] == board[i][0] && board[i][1] == board[i][0] && board[i][2] == board[i][0])
     {
-      if (board[i][j] == board[i + 1][j] && board[i][j] == board[i + 2][j])
-      {
-        return board[i][j];
-      }
-      else if (board[i][j] == board[i][j + 1] && board[i][j] == board[i][j + 2])
-      {
-        return board[i][j];
-      }
-      else if (board[i][j] == board[i + 1][j + 1] && board[i][j] == board[i + 2][j + 2])
-      {
-        return board[i][j];
-      }
-      else if (board[i][j + 2] == board[i + 1][j + 1] && board[i][j + 2] == board[i][j])
-      {
-        return board[i][j];
-      }
+      return board[i][0];
+    }
+    if (board[0][i] == board[i][0] && board[1][i] == board[i][1] && board[2][i] == board[i][2])
+    {
+      return board[i][0];
     }
   }
+
+  if (board[0][0] == board[1][1] && board[0][0] == board[2][2])
+  {
+    return board[0][0];
+  }
+  else if (board[0][2] == board[1][1] && board[0][2] == board[2][0])
+  {
+    return board[0][2];
+  }
+
   return 'c';
 }
 
@@ -121,7 +166,7 @@ bool fill_house(char side, int chosenHouse = 0)
       {
         if (board[i][j] == 'X' || board[i][j] == 'O')
         {
-          chosenHouse &&std::cout << "\nThe house is already filled with \"" << board[i][j] << "\".\n";
+          chosenHouse || std::cout << "\nThe house is already filled with \"" << board[i][j] << "\".\n";
           return false;
         }
         board[i][j] = side;
