@@ -1,18 +1,22 @@
 #include <iostream>
 #include <array>
+#include <cstdlib>
+#include <ctime>
+#include <windows.h>
 
-char check_winner(const std::array<std::array<char, 3>, 3> &board);
-bool fill_house(char side, std::array<std::array<char, 3>, 3> &board);
-void show_board(const std::array<std::array<char, 3>, 3> &board, int round);
+char check_winner();
+bool fill_house(char pc_side, int house);
+void show_board(int round);
+int pc_chose_house();
+
+std::array<std::array<char, 3>, 3> board{{
+    {'1', '2', '3'},
+    {'4', '5', '6'},
+    {'7', '8', '9'},
+}};
 
 int main(int argc, char *argv[])
 {
-  std::array<std::array<char, 3>, 3> board{{
-      {'1', '2', '3'},
-      {'4', '5', '6'},
-      {'7', '8', '9'},
-  }};
-
   char user_side;
   std::cout << "Welcome to our X-O game !\n";
 
@@ -34,16 +38,38 @@ int main(int argc, char *argv[])
 
   std::cout << "\nYou are \"" << user_side << "\".\nI am \"" << pc_side << "\".\nNOW LETS PLAY !\n\n";
 
-  for (int i = 1; check_winner(board) == 'c'; i++)
+  show_board(0);
+  for (int i = 1; check_winner() == 'c'; i++)
   {
-    show_board(board, i);
-    fill_house(user_side, board);
+    bool user_input_result{false};
+    while (!user_input_result)
+    {
+      user_input_result = fill_house(user_side, 0);
+    }
+
+    if (check_winner() != 'c')
+      break;
+
+    bool pc_input_result{false};
+    while (!pc_input_result)
+    {
+      pc_input_result = fill_house(pc_side, pc_chose_house());
+    }
+    show_board(i);
   }
 
-  std::cout << check_winner(board);
+  std::cout << check_winner();
 }
 
-char check_winner(const std::array<std::array<char, 3>, 3> &board)
+int pc_chose_house()
+{
+  _sleep(1000);
+  std::srand(std::time(0));
+  int chosed = rand() % 9;
+  return chosed;
+}
+
+char check_winner()
 {
   for (int i = 0; i < size(board); i++)
   {
@@ -70,15 +96,19 @@ char check_winner(const std::array<std::array<char, 3>, 3> &board)
   return 'c';
 }
 
-bool fill_house(char side, std::array<std::array<char, 3>, 3> &board)
+bool fill_house(char side, int chosenHouse = 0)
 {
-  int house{0};
-  std::cout << "Which house you wanna fill : ";
-  std::cin >> house;
-  if (house > 9 || house < 0)
+  int house{-1};
+  house = chosenHouse;
+  if (!chosenHouse)
   {
-    std::cout << "Out of Houses ! enter a valid one.\n";
-    return false;
+    std::cout << "Which house you wanna fill : ";
+    std::cin >> house;
+    if (house > 9 || house < 0)
+    {
+      std::cout << "Out of Houses ! enter a valid one.\n";
+      return false;
+    }
   }
 
   int count{0};
@@ -91,7 +121,7 @@ bool fill_house(char side, std::array<std::array<char, 3>, 3> &board)
       {
         if (board[i][j] == 'X' || board[i][j] == 'O')
         {
-          std::cout << "\nThe house is already filled with \"" << board[i][j] << "\".\n";
+          chosenHouse &&std::cout << "\nThe house is already filled with \"" << board[i][j] << "\".\n";
           return false;
         }
         board[i][j] = side;
@@ -102,9 +132,9 @@ bool fill_house(char side, std::array<std::array<char, 3>, 3> &board)
   return false;
 }
 
-void show_board(const std::array<std::array<char, 3>, 3> &board, int round)
+void show_board(int round)
 {
-  std::cout << "Round \"" << round << "\" :\n";
+  round > 0 && std::cout << "Round \"" << round << "\" :\n";
   for (int i = 0; i < size(board); i++)
   {
     for (int j = 0; j < size(board); j++)
