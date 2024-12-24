@@ -99,16 +99,12 @@ int pc_chose_house()
 
 char check_winner()
 {
-  for (int i = 0; i < 3; i++)
+ for (int i = 0; i < 3; i++)
   {
-    if (board[i][0] == board[i][0] && board[i][1] == board[i][0] && board[i][2] == board[i][0])
-    {
-      return board[i][0];
-    }
-    if (board[0][i] == board[i][0] && board[1][i] == board[i][1] && board[2][i] == board[i][2])
-    {
-      return board[i][0];
-    }
+      if (board[i][0] == board[i][1] && board[i][1] == board[i][2])
+	return board[i][0];
+      if (board[0][i] == board[1][i] && board[1][i] == board[2][i])
+	return board[0][i];
   }
 
   if (board[0][0] == board[1][1] && board[0][0] == board[2][2])
@@ -122,10 +118,10 @@ char check_winner()
     
   for (const auto &row : board)
   {
-	for (const auto &home : row)
+     for (const auto &home : row)
 	{
-		if (home != 'X' && home != 'O')
-			return 'c';
+	    if (home != 'X' && home != 'O')
+		return 'c';
 	}
   }
 
