@@ -1,6 +1,14 @@
-#include "include/action_funcs.h"
+#include "action_funcs.h"
 
-int pc_chose_house(std::mt19937 random_nums)
+std::mt19937 random_nums{std::random_device{}()};
+
+void cleanInput()
+{
+  std::cin.clear();
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+int pc_chose_house()
 {
   int chosed = random_nums() % 9 + 1;
   return chosed;
@@ -37,18 +45,18 @@ char check_winner(std::array<std::array<char, 3>, 3> &board)
   return '=';
 }
 
-bool fill_house(char side, int chosenHouse = 0, std::array<std::array<char, 3>, 3> &board)
+bool fill_house(char side, std::array<std::array<char, 3>, 3> &board, int chosenHouse = 0)
 {
   int house{-1};
   house = chosenHouse;
-  std::cout << "Which house you wanna fill : \n";
+  std::cout << "Which house you wanna fill : " << chosenHouse << '\n';
   if (!chosenHouse)
   {
     std::cin >> house;
     if (!std::cin)
     {
       std::cout << "Invalid inputs, try again.\n";
-      // cleanInput();
+      cleanInput();
       return false;
     }
 

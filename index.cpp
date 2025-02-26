@@ -1,12 +1,6 @@
-#include <iostream>
-#include <array>
-
 #include "print_dir/include/print_funcs.h"
 #include "action_dir/include/action_funcs.h"
 
-void cleanInput();
-
-std::mt19937 random_nums{std::random_device{}()};
 std::array<std::array<char, 3>, 3> board{{
 		{'1', '2', '3'},
 		{'4', '5', '6'},
@@ -39,7 +33,7 @@ int main(int argc, char *argv[])
 		bool user_input_result{false};
 		while (!user_input_result)
 		{
-			user_input_result = fill_house(user_side, 0);
+			user_input_result = fill_house(user_side, board, 0);
 		}
 		if (check_winner(board) != 'c')
 		{
@@ -51,7 +45,7 @@ int main(int argc, char *argv[])
 		bool pc_input_result{false};
 		while (!pc_input_result)
 		{
-			pc_input_result = fill_house(pc_side, pc_chose_house(random_nums));
+			pc_input_result = fill_house(pc_side, board, pc_chose_house());
 		}
 		if (check_winner(board) != 'c')
 		{
@@ -65,10 +59,4 @@ int main(int argc, char *argv[])
 	show_board(0, board);
 
 	congratulations(check_winner(board), user_side);
-}
-
-void cleanInput()
-{
-	std::cin.clear();
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
