@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 
 	std::cout << "\nYou are \"" << user_side << "\".\nI am \"" << pc_side << "\".\nNOW LETS PLAY !\n\n";
 
-	show_board(0);
+	show_board(0, board);
 	for (int i = 1; check_winner() == 'c'; i++)
 	{
 		bool user_input_result{false};
@@ -47,10 +47,10 @@ int main(int argc, char *argv[])
 		}
 		if (check_winner() != 'c')
 		{
-			show_board(i);
+			show_board(i, board);
 			break;
 		}
-		show_board(i);
+		show_board(i, board);
 
 		bool pc_input_result{false};
 		while (!pc_input_result)
@@ -59,14 +59,14 @@ int main(int argc, char *argv[])
 		}
 		if (check_winner() != 'c')
 		{
-			show_board(i);
+			show_board(i, board);
 			break;
 		}
-		show_board(i);
+		show_board(i, board);
 	}
 
 	std::cout << "\nFinall result:\n";
-	show_board(0);
+	show_board(0, board);
 
 	congratulations(check_winner(), user_side);
 }
@@ -112,7 +112,7 @@ bool fill_house(char side, int chosenHouse = 0)
 {
 	int house{-1};
 	house = chosenHouse;
-	std::cout << "Which house you wanna fill : ";
+	std::cout << "Which house you wanna fill : \n";
 	if (!chosenHouse)
 	{
 		std::cin >> house;

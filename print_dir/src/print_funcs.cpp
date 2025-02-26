@@ -1,23 +1,22 @@
-#include <iostream>
-#include "index.h"
+#include "print_funcs.h"
 
 void congratulations(char result, char user_side)
 {
   if (result == user_side)
   {
-    std::cout << "\nWell done you won !.";
+    std::cout << "\nWell done you won !.\n";
     return;
   }
   else if (result == '=')
   {
-    std::cout << "\nIt was a drow !.";
+    std::cout << "\nIt was a drow !.\n";
     return;
   }
 
-  std::cout << "\nI won !.";
+  std::cout << "\nI won !.\n";
 }
 
-void show_board(int round)
+void show_board(int round, std::array<std::array<char, 3>, 3> &board)
 {
   round > 0 && std::cout << "Round \"" << round << "\" :\n";
   for (int i = 0; i < size(board); i++)
