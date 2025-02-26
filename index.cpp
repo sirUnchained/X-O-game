@@ -3,18 +3,18 @@
 #include <limits>
 #include <random>
 
+#include "print_dir/include/print_funcs.h"
+
 void cleanInput();
 char check_winner();
 bool fill_house(char pc_side, int house);
-void show_board(int round);
 int pc_chose_house();
-void congratulations(char result, char user_side);
 
 std::mt19937 random_nums{std::random_device{}()};
 std::array<std::array<char, 3>, 3> board{{
-	{'1', '2', '3'},
-	{'4', '5', '6'},
-	{'7', '8', '9'},
+		{'1', '2', '3'},
+		{'4', '5', '6'},
+		{'7', '8', '9'},
 }};
 
 int main(int argc, char *argv[])
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 	{
 		std::cout << "Please only select one of these \"X\" or \"O\"\n";
 		std::cin >>
-			user_side;
+				user_side;
 		user_side = (char)toupper(user_side);
 
 		if (!std::cin)
@@ -69,22 +69,6 @@ int main(int argc, char *argv[])
 	show_board(0);
 
 	congratulations(check_winner(), user_side);
-}
-
-void congratulations(char result, char user_side)
-{
-	if (result == user_side)
-	{
-		std::cout << "\nWell done you won !.";
-		return;
-	}
-	else if (result == '=')
-	{
-		std::cout << "\nIt was a drow !.";
-		return;
-	}
-
-	std::cout << "\nI won !.";
 }
 
 int pc_chose_house()
@@ -165,23 +149,6 @@ bool fill_house(char side, int chosenHouse = 0)
 		}
 	}
 	return false;
-}
-
-void show_board(int round)
-{
-	round > 0 && std::cout << "Round \"" << round << "\" :\n";
-	for (int i = 0; i < size(board); i++)
-	{
-		for (int j = 0; j < size(board); j++)
-		{
-			std::cout << board[i][j];
-			if (j != 2)
-				std::cout << '|';
-		}
-		if (i != 2)
-			std::cout << "\n_ _ _\n";
-	}
-	std::cout << "\n\n";
 }
 
 void cleanInput()

@@ -1,5 +1,5 @@
 #include <iostream>
-#include <index.h>
+#include "index.h"
 
 void congratulations(char result, char user_side)
 {
